@@ -1,0 +1,176 @@
+# Basic API Call
+
+## ChatGPT API?
+
+- Technically **[ChatGPT](https://chat.openai.com/) is a web app** that uses the **[Open AI Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create)**.
+  - It doesn't have it's own API
+- Buuuut, for today we'll going to call it the **ChatGPT API** because it's easier to say and remember.
+
+## Setup
+
+1. [Create an Open AI account](https://platform.openai.com)
+2. [Create an API key](https://platform.openai.com/account/api-keys)
+
+## Fetch Request
+
+<CH.Scrollycoding>
+
+1. We can make a `POST` request to OpenAI using a `fetch` request.
+
+```ts
+fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+});
+```
+
+---
+
+2. Then we can add some extra headers including the API key.
+
+```typescript focus=3:6
+fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+  },
+});
+```
+
+---
+
+3. Add the body of the request.
+
+- The [`model`](https://platform.openai.com/docs/models/model-endpoint-compatibility) allows us to choose between things like gpt-3.5-turbo and gpt-4.
+- The `messages` array is how we pass in a chat history.
+  - The ChatGPT API itself has no memory/session state.
+- There are [other parameters](https://platform.openai.com/docs/api-reference/chat/create#chat/create-temperature) you can pass to fine tune your prompt
+
+```typescript focus=7:15
+fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+  },
+  body: JSON.stringify({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "user",
+        content: message,
+      },
+    ],
+  }),
+});
+```
+
+</CH.Scrollycoding>
+
+## Use it in Remix
+
+<CH.Scrollycoding>
+
+Make the OpenAI `fetch` request inside of a Remix action
+
+- Protects the API key
+- Return the `fetch` directly as the Action response
+
+```ts focus=1:7,8[1:14] routes/demo.tsx
+export const action = async ({ request }: ActionArgs) => {
+  let formData = await request.formData();
+  let prompt = formData.get("prompt");
+  if (!prompt) {
+    return new Response("Prompt is required", { status: 400 });
+  }
+
+  return fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  });
+};
+```
+
+---
+
+Submit to the action with basic HTML form.
+
+```tsx routes/demo.tsx
+export default function Demo() {
+  return (
+    <form method="post">
+      <label>
+        Prompt
+        <textarea required name="prompt"></textarea>
+      </label>
+      <div>
+        <button type="submit">Send</button>
+      </div>
+    </form>
+  );
+}
+```
+
+---
+
+- We don't want to navigate after submission, we want to show the response.
+- The trick is to use `fetcher.Form`
+
+```tsx focus=2,5 routes/demo.tsx
+export default function Demo() {
+  let fetcher = useFetcher();
+
+  return (
+    <fetcher.Form method="post">
+      <label>
+        Prompt
+        <textarea required name="prompt"></textarea>
+      </label>
+      <div>
+        <button type="submit">Send</button>
+      </div>
+    </fetcher.Form>
+  );
+}
+```
+
+---
+
+Display the response from `fetcher.data`
+
+```tsx focus=13:15 routes/demo.tsx
+export default function Demo() {
+  let fetcher = useFetcher();
+
+  return (
+    <fetcher.Form method="post">
+      <label>
+        Prompt
+        <textarea required name="prompt"></textarea>
+      </label>
+      <div>
+        <button type="submit">Send</button>
+      </div>
+      {fetcher.data && (
+        <pre>{fetcher.data?.choices?.[0]?.message?.content}</pre>
+      )}
+    </fetcher.Form>
+  );
+}
+```
+
+</CH.Scrollycoding>
+
+<div style={{ height: "300px" }} />

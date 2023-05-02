@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ch-scrollycoding-sticker-width: 70ch;
+}
+.prose {
+  max-width: none;
+}
+
+.prose p {
+  max-width: 70ch;
+}
+
+html .ch-code-scroll-parent {
+  min-height: 600px;
+}
