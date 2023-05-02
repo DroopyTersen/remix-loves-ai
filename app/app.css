@@ -5,6 +5,20 @@
 :root {
   --ch-scrollycoding-sticker-width: 70ch;
 }
+.presentation-mode .ch-scrollycoding {
+  --ch-scrollycoding-sticker-width: 90vw;
+}
+.presentation-mode .ch-scrollycoding .ch-scrollycoding-content {
+  flex-grow: 0;
+  width: 0;
+  opacity: 0;
+  /* height: 600px; */
+}
+.presentation-mode .ch-scrollycoding .ch-scrollycoding-step-content {
+  min-height: 600px;
+  height: 600px;
+}
+
 .prose {
   max-width: none;
 }
@@ -13,6 +27,10 @@
   max-width: 70ch;
 }
 
-html .ch-code-scroll-parent {
+html .ch-scrollycoding-sticker .ch-code-scroll-parent {
   min-height: 600px;
+}
+
+h1 {
+  padding: 0;
 }

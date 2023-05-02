@@ -1,23 +1,14 @@
-# Basic API Call
+## It's a plain `fetch` request
 
-## ChatGPT API?
+While OpenAI has a SDK for Node.js you can add, you can also make a raw `fetch` request to `https://api.openai.com/v1/chat/completions`
 
-- Technically **[ChatGPT](https://chat.openai.com/) is a web app** that uses the **[Open AI Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create)**.
-  - It doesn't have it's own API
-- Buuuut, for today we'll going to call it the **ChatGPT API** because it's easier to say and remember.
-
-## Setup
-
-1. [Create an Open AI account](https://platform.openai.com)
-2. [Create an API key](https://platform.openai.com/account/api-keys)
-
-## Fetch Request
+<div style={{ height: "50px" }} />
 
 <CH.Scrollycoding>
 
-1. We can make a `POST` request to OpenAI using a `fetch` request.
+1. Make a `POST` request to the OpenAI `chat/completions` endpoint.
 
-```ts
+```ts fetchChatCompletion.ts
 fetch("https://api.openai.com/v1/chat/completions", {
   method: "POST",
 });
@@ -25,9 +16,9 @@ fetch("https://api.openai.com/v1/chat/completions", {
 
 ---
 
-2. Then we can add some extra headers including the API key.
+2. Authorize the request with an API key.
 
-```typescript focus=3:6
+```typescript focus=3:6 fetchChatCompletion.ts
 fetch("https://api.openai.com/v1/chat/completions", {
   method: "POST",
   headers: {
@@ -39,14 +30,14 @@ fetch("https://api.openai.com/v1/chat/completions", {
 
 ---
 
-3. Add the body of the request.
+3. Craft the request body as a JSON string.
 
 - The [`model`](https://platform.openai.com/docs/models/model-endpoint-compatibility) allows us to choose between things like gpt-3.5-turbo and gpt-4.
 - The `messages` array is how we pass in a chat history.
   - The ChatGPT API itself has no memory/session state.
 - There are [other parameters](https://platform.openai.com/docs/api-reference/chat/create#chat/create-temperature) you can pass to fine tune your prompt
 
-```typescript focus=7:15
+```typescript focus=7:15 fetchChatCompletion.ts
 fetch("https://api.openai.com/v1/chat/completions", {
   method: "POST",
   headers: {
@@ -67,6 +58,35 @@ fetch("https://api.openai.com/v1/chat/completions", {
 
 </CH.Scrollycoding>
 
+<div style={{ height: "75px" }} />
+
+## `chat.completion` API Response
+
+The answer will be in `choices[0].message.content`.
+
+```json response.json
+{
+  "id": "chatcmpl-123",
+  "object": "chat.completion",
+  "created": 1677652288,
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "Hello there, how may I assist you today?"
+      }
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 9,
+    "completion_tokens": 12,
+    "total_tokens": 21
+  }
+}
+```
+
+<div style={{ height: "100px" }} />
+
 ## Use it in Remix
 
 <CH.Scrollycoding>
@@ -76,13 +96,10 @@ Make the OpenAI `fetch` request inside of a Remix action
 - Protects the API key
 - Return the `fetch` directly as the Action response
 
-```ts focus=1:7,8[1:14] routes/demo.tsx
-export const action = async ({ request }: ActionArgs) => {
+```ts focus=1:3,5[1:14] routes/demo.tsx
+export const action = async ({ request }) => {
   let formData = await request.formData();
   let prompt = formData.get("prompt");
-  if (!prompt) {
-    return new Response("Prompt is required", { status: 400 });
-  }
 
   return fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -105,7 +122,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 ---
 
-Submit to the action with basic HTML form.
+Submit to the `action` with a basic HTML `<form/>`.
 
 ```tsx routes/demo.tsx
 export default function Demo() {
@@ -113,7 +130,7 @@ export default function Demo() {
     <form method="post">
       <label>
         Prompt
-        <textarea required name="prompt"></textarea>
+        <textarea required name="prompt" />
       </label>
       <div>
         <button type="submit">Send</button>
@@ -128,7 +145,7 @@ export default function Demo() {
 - We don't want to navigate after submission, we want to show the response.
 - The trick is to use `fetcher.Form`
 
-```tsx focus=2,5 routes/demo.tsx
+```tsx focus=2,5,13 routes/demo.tsx
 export default function Demo() {
   let fetcher = useFetcher();
 
@@ -136,7 +153,7 @@ export default function Demo() {
     <fetcher.Form method="post">
       <label>
         Prompt
-        <textarea required name="prompt"></textarea>
+        <textarea required name="prompt" />
       </label>
       <div>
         <button type="submit">Send</button>
@@ -148,7 +165,7 @@ export default function Demo() {
 
 ---
 
-Display the response from `fetcher.data`
+Display the API response stored on `fetcher.data`
 
 ```tsx focus=13:15 routes/demo.tsx
 export default function Demo() {
@@ -158,7 +175,7 @@ export default function Demo() {
     <fetcher.Form method="post">
       <label>
         Prompt
-        <textarea required name="prompt"></textarea>
+        <textarea required name="prompt" />
       </label>
       <div>
         <button type="submit">Send</button>
