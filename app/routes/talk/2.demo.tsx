@@ -1,6 +1,7 @@
 import { ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { Loading } from "~/components/Loading";
+import { OpenAILogo } from "~/components/OpenAILogo";
 
 export default function Demo1() {
   let fetcher = useFetcher();
@@ -33,9 +34,18 @@ export default function Demo1() {
           </div>
         </fieldset>
         {data && (
-          <pre className="max-w-full text-sm whitespace-pre-wrap">
-            {data?.choices?.[0]?.message?.content}
-          </pre>
+          <figure className="p-6 shadow-lg bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
+            <p className="whitespace-pre-wrap">
+              “{data?.choices?.[0]?.message?.content}”
+            </p>
+            <figcaption className="flex items-center mt-6 gap-x-4">
+              <OpenAILogo />
+              <div>
+                <div className="font-semibold">OpenAI Chat Completion API</div>
+                <div className="font-mono text-gray-600">{data?.model}</div>
+              </div>
+            </figcaption>
+          </figure>
         )}
       </fetcher.Form>
     </div>

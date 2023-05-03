@@ -15,7 +15,7 @@ export const SLIDES: SlideDefinition[] = [
   },
   {
     title: "How fast is it?",
-    hasDemo: true,
+    hasDemo: false,
   },
   {
     title: "Streaming the Chat Completion API",

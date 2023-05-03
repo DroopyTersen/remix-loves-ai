@@ -19,6 +19,9 @@
   height: 600px;
 }
 
+html textarea {
+  border-radius: 8px;
+}
 .prose {
   max-width: none;
 }
