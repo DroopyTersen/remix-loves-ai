@@ -12,7 +12,10 @@ export default function Demo1() {
   let data = fetcher.data;
   return (
     <div>
-      <fetcher.Form method="post" className="max-w-2xl">
+      <fetcher.Form
+        method="post"
+        className="max-w-2xl p-4 border rounded-lg shadow-xl md:p-8"
+      >
         <fieldset disabled={isLoading}>
           <label>
             <span>User Prompt</span>
@@ -37,7 +40,7 @@ export default function Demo1() {
           </div>
         </fieldset>
         {data && (
-          <figure className="p-6 shadow-lg bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
+          <figure className="p-6 bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
             <p className="whitespace-pre-wrap">
               “{data?.choices?.[0]?.message?.content}”
             </p>
@@ -50,11 +53,11 @@ export default function Demo1() {
             </figcaption>
           </figure>
         )}
-        <details className="mt-8">
-          <summary>System Prompt</summary>
-          <p className="p-2 border rounded bg-gray-50">{SYSTEM_PROMPT}</p>
-        </details>
       </fetcher.Form>
+      <details className="mt-8">
+        <summary>System Prompt</summary>
+        <p className="p-2 border rounded bg-gray-50">{SYSTEM_PROMPT}</p>
+      </details>
     </div>
   );
 }
