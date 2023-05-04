@@ -31,6 +31,7 @@ export function useStopwatch() {
 
   function reset() {
     stop();
+    setValue(0);
   }
 
   return { start, stop, reset, value };

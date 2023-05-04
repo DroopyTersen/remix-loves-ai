@@ -9,12 +9,12 @@ export function OpenAILogo() {
       >
         <defs>
           <linearGradient id="linear" x1="100%" y1="22%" x2="0%" y2="78%">
-            <stop offset="0%" stop-color="rgb(131,211,231)"></stop>
-            <stop offset="2%" stop-color="rgb(127,203,229)"></stop>
-            <stop offset="25%" stop-color="rgb(86,115,217)"></stop>
-            <stop offset="49%" stop-color="rgb(105,80,190)"></stop>
-            <stop offset="98%" stop-color="rgb(197,59,119)"></stop>
-            <stop offset="100%" stop-color="rgb(197,59,119)"></stop>
+            <stop offset="0%" stopColor="rgb(131,211,231)"></stop>
+            <stop offset="2%" stopColor="rgb(127,203,229)"></stop>
+            <stop offset="25%" stopColor="rgb(86,115,217)"></stop>
+            <stop offset="49%" stopColor="rgb(105,80,190)"></stop>
+            <stop offset="98%" stopColor="rgb(197,59,119)"></stop>
+            <stop offset="100%" stopColor="rgb(197,59,119)"></stop>
           </linearGradient>
         </defs>
         <path

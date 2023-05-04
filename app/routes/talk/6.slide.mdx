@@ -1,0 +1,255 @@
+## Open AI Chat Completion Event Stream
+
+<div className='notes'>
+One limitation of a `EventSource` is that it only supports a `GET` request.
+
+- We can't leverage the Remix `action` we previously used.
+- Instead, we create a Resource route to respond to a `GET`.
+- We can't submit the prompt as `POST` formData.
+- Instead, we use a query string parameter.
+
+</div>
+![Remix SSE Handler](/assets/remix-sse.png)
+
+<div style={{ height: "50px" }} />
+
+The parsed `event.data` looks like the following, where we're interested in `choices[0].delta.content`.
+
+```json event-data.json
+{
+  "id": "chatcmpl-7CHegq3EwN9wDkGv9NO33t2Cw1NER",
+  "object": "chat.completion.chunk",
+  "created": 1683162158,
+  "model": "gpt-3.5-turbo-0301",
+  "choices": [
+    {
+      // mark(2)
+      "delta": {
+        // mark[20:27]
+        "content": " remix"
+      },
+      "index": 0,
+      "finish_reason": null
+    }
+  ]
+}
+```
+
+<div style={{ height: "50px" }} />
+
+## Create a Resource Route
+
+<div className='notes'>
+
+The clientside `EventSource` requires a `GET`.
+
+- We use a Remix Resource Route to convert OpenAI's `POST` to `GET`.
+- A Resource Route is really just a route file that doesn't have a default export (a component).
+
+</div>
+
+_Expose OpenAI's POST as a GET_
+
+```ts routes/demo.api.ts
+// mark(1:3)
+export const loader = async ({ request }) => {
+  let urlSearchParams = new URL(request?.url).searchParams;
+  let prompt = urlSearchParams.get("prompt");
+
+  if (!prompt) {
+    return new Response("prompt is required", { status: 400 });
+  }
+
+  return fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      // mark
+      stream: true,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  });
+};
+```
+
+## Handle the Event Stream
+
+<CH.Scrollycoding>
+
+First we'll setup some boiler plate code.
+
+```ts routes/stream-demo.tsx
+function handleChatGPTStream(prompt, onData) {
+  const eventSource = new EventSource("/api/chatgpt?prompt=" + prompt);
+
+  eventSource.onmessage = (event) => {
+    console.log(event.data);
+  };
+
+  eventSource.onerror = (event) => {
+    eventSource.close();
+  };
+}
+```
+
+---
+
+_How do we know when it's done?_
+
+When ChatGPT is finished responding, it will return with a message of **[DONE]**
+
+```ts routes/stream-demo.tsx
+function handleChatGPTStream(prompt, onData) {
+  const eventSource = new EventSource("/api/chatgpt?prompt=" + prompt);
+
+  eventSource.onmessage = (event) => {
+    // focus(1:5)
+    if (event?.data === "[DONE]") {
+      eventSource.close();
+    } else {
+      // TODO: Parse event.data
+    }
+  };
+
+  eventSource.onerror = (event) => {
+    eventSource.close();
+  };
+}
+```
+
+---
+
+Pull out the additional text from `event.data.choices[0].delta.content`
+
+```ts routes/stream-demo.tsx
+function handleChatGPTStream(prompt, onData) {
+  const eventSource = new EventSource("/api/chatgpt?prompt=" + prompt);
+
+  eventSource.onmessage = (event) => {
+    if (event?.data === "[DONE]") {
+      eventSource.close();
+    } else {
+      // focus(1:6)
+      let data = JSON.parse(event.data);
+      let content = data?.choices?.[0]?.delta?.content;
+      if (content) {
+        // Invoke the callback with the new text
+        onData(content);
+      }
+    }
+  };
+
+  eventSource.onerror = (event) => {
+    eventSource.close();
+  };
+}
+```
+
+</CH.Scrollycoding>
+
+<div style={{ height: "50px" }} />
+
+## Update the Form
+
+<CH.Scrollycoding>
+
+Start with a basic form
+
+- Previously we had used `fetcher.Form` but that won't work here because we are trying to consume an EventStream.
+
+```tsx routes/stream-demo.tsx
+export default function Demo() {
+  return (
+    <form>
+      <label>
+        Prompt
+        <textarea required name="prompt" />
+      </label>
+      <div>
+        <button type="submit">Send</button>
+      </div>
+    </form>
+  );
+}
+```
+
+---
+
+Add an `onSubmit` handler that calls `handleChatGPTStream`
+
+```tsx routes/stream-demo.tsx
+export default function Demo() {
+  return (
+    <form
+      // focus(1:7)
+      onSubmit={(event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        // mark(1:3)
+        handleChatGPTStream(formData.get("prompt"), (newText) => {
+          // TODO
+        });
+      }}
+    >
+      <label>
+        Prompt
+        <textarea required name="prompt" />
+      </label>
+      <div>
+        <button type="submit">Send</button>
+      </div>
+    </form>
+  );
+}
+```
+
+---
+
+Add some state to track the streamed response text
+
+```tsx routes/stream-demo.tsx
+export default function Demo() {
+  // focus
+  const [streamedText, setStreamedText] = useState("");
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        // focus(1:3)
+        handleChatGPTStream(formData.get("prompt"), (newText) => {
+          // mark
+          setStreamedText((prevText) => prevText + newText);
+        });
+      }}
+    >
+      <label>
+        Prompt
+        <textarea required name="prompt" />
+      </label>
+      <div>
+        <button type="submit">Send</button>
+      </div>
+      // focus(1:3)
+      {streamedText && <pre>{streamedText}</pre>}
+    </form>
+  );
+}
+```
+
+</CH.Scrollycoding>
+
+<div style={{ height: "100px" }} />
+
+## [Demo](demo)
+
+<div style={{ height: "400px" }} />

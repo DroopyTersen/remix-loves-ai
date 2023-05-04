@@ -18,6 +18,9 @@
   min-height: 600px;
   height: 600px;
 }
+.presentation-mode .notes {
+  display: none;
+}
 
 html textarea {
   border-radius: 8px;
@@ -25,11 +28,24 @@ html textarea {
 .prose {
   max-width: none;
 }
-
+.notes {
+  /* padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background:  */
+}
 .prose p {
   max-width: 70ch;
 }
-
+.prose p:has(img) {
+  max-width: 1000px;
+}
+.prose img {
+  max-width: 90vw;
+}
+.prose ul {
+  max-width: 70ch;
+}
 html .ch-scrollycoding-sticker .ch-code-scroll-parent {
   min-height: 600px;
 }

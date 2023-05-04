@@ -19,12 +19,15 @@ export const SLIDES: SlideDefinition[] = [
   },
   {
     title: "Streaming the Chat Completion API",
-    shortTitle: "Stream API Response",
+    shortTitle: "stream:true",
+    hasDemo: true,
   },
   {
-    title: "Server Sent Events",
+    title: "Server-sent Events",
   },
   {
-    title: "Real World Strategies",
+    title: "Consuming an Event Stream in Remix",
+    shortTitle: "Remix'ing SSE",
+    hasDemo: true,
   },
 ];

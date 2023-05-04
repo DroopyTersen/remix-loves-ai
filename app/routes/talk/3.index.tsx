@@ -3,21 +3,18 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import { Loading } from "~/components/Loading";
 import { OpenAILogo } from "~/components/OpenAILogo";
-import { useStopwatch } from "~/components/Stopwatch";
+import { useStopwatch } from "~/components/useStopwatch";
 
 export default function IsItFastDemo() {
-  let fetcher = useFetcher();
-  let isLoading = fetcher?.state !== "idle";
-  let data = fetcher.data;
   return (
     <div className="grid grid-cols-2 gap-6">
-      <PromptDemo prompt="Count from 1 to 3 in words." />
-      <PromptDemo prompt="Count from 1 to 30 in words." />
+      <PromptDemo label={"Prompt A"} prompt="Count from 1 to 3 in words." />
+      <PromptDemo label="Prompt B" prompt="Count from 1 to 30 in words." />
     </div>
   );
 }
 
-function PromptDemo({ prompt }: { prompt: string }) {
+function PromptDemo({ prompt, label }: { prompt: string; label: string }) {
   let fetcher = useFetcher();
   let isLoading = fetcher?.state !== "idle";
   let data = fetcher.data;
@@ -38,7 +35,7 @@ function PromptDemo({ prompt }: { prompt: string }) {
     >
       <fieldset disabled={isLoading}>
         <label>
-          <span>Prompt</span>
+          <span>{label}</span>
           <textarea required name="prompt" rows={2} defaultValue={prompt} />
         </label>
         <div>
@@ -51,18 +48,17 @@ function PromptDemo({ prompt }: { prompt: string }) {
           )}
         </div>
       </fieldset>
-      {isLoading ||
-        (fetcher.data && (
-          <div className="my-4 font-mono text-2xl font-bold text-center">
-            {stopwatch?.value?.toFixed(2)} seconds
-          </div>
-        ))}
-      {data && (
+      {(isLoading || fetcher.data) && (
+        <div className="my-4 font-mono text-2xl font-bold text-center">
+          {stopwatch?.value?.toFixed(2)} seconds
+        </div>
+      )}
+      {data && !isLoading && (
         <figure className="p-6 shadow-lg bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
-          <p className="whitespace-pre-wrap">
+          <p className="text-lg whitespace-pre-wrap">
             “{data?.choices?.[0]?.message?.content}”
           </p>
-          <figcaption className="flex items-center mt-6 gap-x-4">
+          <figcaption className="flex items-center mt-6 text-sm gap-x-4">
             <OpenAILogo />
             <div>
               <div className="font-semibold">OpenAI Chat Completion API</div>

@@ -1,0 +1,37 @@
+<div className='notes'>
+
+- A one-way communication channel from server to client
+- Suitable for **realtime** updates.
+- Like **one-way WebSockets**
+
+</div>
+
+![Server-sent Events](/assets/server-sent-events.png)
+
+## Vocabulary
+
+- **EventStream**: What the server sends to the client.
+  - It's a text stream with a specific format
+- **EventSource**: A browser API to consume an EventStream
+
+## Consuming SSE in the browser
+
+<div className='notes'>
+
+The browser has a built-in API, `EventSource` to consume server-sent events.
+
+1. Point to a URL that serves an event stream via `GET` request.
+2. Listen to the `onmessage` event
+
+</div>
+
+```js eventSource.js
+const eventSource = new EventSource("/api/my-event-stream");
+
+eventSource.onmessage = (event) => {
+  // event.data is always a string. So you may need JSON.parse()
+  console.log(event.data);
+};
+```
+
+<div style={{ height: "100px" }} />

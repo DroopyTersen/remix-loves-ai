@@ -3,9 +3,6 @@ import { useFetcher } from "@remix-run/react";
 import { Loading } from "~/components/Loading";
 import { OpenAILogo } from "~/components/OpenAILogo";
 
-const SYSTEM_PROMPT = `You are a AI Language model, co-presenting a talk at a tech conference about Remix, the React.js web framework. You are super witty, with a good sense of humor. When your co-presenter, Andrew, prompts you, try to provide some fun clever banter. Nothing too cheesy though please. Be cool, not cringe.
-
-Please limit the response to around 60 or 70 words.`;
 export default function Demo1() {
   let fetcher = useFetcher();
   let isLoading = fetcher?.state !== "idle";
@@ -15,7 +12,7 @@ export default function Demo1() {
       <fetcher.Form method="post" className="max-w-2xl">
         <fieldset disabled={isLoading}>
           <label>
-            <span>User Prompt</span>
+            <span>Prompt</span>
             <textarea
               required
               name="prompt"
@@ -28,8 +25,8 @@ export default function Demo1() {
           </label>
           <div>
             {!isLoading ? (
-              <button className="w-full bg-emerald-600" type="submit">
-                Send
+              <button className="w-full font-mono bg-emerald-600" type="submit">
+                stream:true
               </button>
             ) : (
               <Loading />
@@ -50,10 +47,6 @@ export default function Demo1() {
             </figcaption>
           </figure>
         )}
-        <details className="mt-8">
-          <summary>System Prompt</summary>
-          <p className="p-2 border rounded bg-gray-50">{SYSTEM_PROMPT}</p>
-        </details>
       </fetcher.Form>
     </div>
   );
@@ -74,11 +67,8 @@ export const action = async ({ request }: ActionArgs) => {
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
+      stream: true,
       messages: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT,
-        },
         {
           role: "user",
           content: prompt,

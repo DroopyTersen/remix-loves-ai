@@ -1,8 +1,11 @@
+<div className='notes'>
+
 ## It's a plain `fetch` request
 
 While OpenAI has a SDK for Node.js you can add, you can also make a raw `fetch` request to `https://api.openai.com/v1/chat/completions`
 
 <div style={{ height: "50px" }} />
+</div>
 
 <CH.Scrollycoding>
 
@@ -23,6 +26,7 @@ fetch("https://api.openai.com/v1/chat/completions", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
+    // mark
     Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
   },
 });
@@ -30,12 +34,31 @@ fetch("https://api.openai.com/v1/chat/completions", {
 
 ---
 
-3. Craft the request body as a JSON string.
+3a. The [`model`](https://platform.openai.com/docs/models/model-endpoint-compatibility) allows us to choose between things like gpt-3.5-turbo and gpt-4.
 
-- The [`model`](https://platform.openai.com/docs/models/model-endpoint-compatibility) allows us to choose between things like gpt-3.5-turbo and gpt-4.
-- The `messages` array is how we pass in a chat history.
-  - The ChatGPT API itself has no memory/session state.
-- There are [other parameters](https://platform.openai.com/docs/api-reference/chat/create#chat/create-temperature) you can pass to fine tune your prompt
+```typescript focus=7:15 fetchChatCompletion.ts
+fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+  },
+  body: JSON.stringify({
+    // mark(1)
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "user",
+        content: message,
+      },
+    ],
+  }),
+});
+```
+
+---
+
+3b. The `messages` array is how we pass in a chat history. The ChatGPT API itself has no memory/session state.
 
 ```typescript focus=7:15 fetchChatCompletion.ts
 fetch("https://api.openai.com/v1/chat/completions", {
@@ -46,6 +69,7 @@ fetch("https://api.openai.com/v1/chat/completions", {
   },
   body: JSON.stringify({
     model: "gpt-3.5-turbo",
+    // mark(1:6)
     messages: [
       {
         role: "user",
@@ -74,6 +98,7 @@ The answer will be in `choices[0].message.content`.
     {
       "message": {
         "role": "assistant",
+        // mark(1)
         "content": "Hello there, how may I assist you today?"
       }
     }
@@ -87,7 +112,8 @@ The answer will be in `choices[0].message.content`.
 ```
 
 <div style={{ height: "100px" }} />
-
+### [Demo](demo)
+<div style={{ height: "50px" }} />
 ## Use it in Remix
 
 <CH.Scrollycoding>
@@ -192,3 +218,48 @@ export default function Demo() {
 </CH.Scrollycoding>
 
 <div style={{ height: "300px" }} />
+
+The final Remix route file would look like this
+
+```tsx routes/demo.tsx
+export default function Demo() {
+  let fetcher = useFetcher();
+
+  return (
+    <fetcher.Form method="post">
+      <label>
+        Prompt
+        <textarea required name="prompt" />
+      </label>
+      <div>
+        <button type="submit">Send</button>
+      </div>
+      {fetcher.data && (
+        <pre>{fetcher.data?.choices?.[0]?.message?.content}</pre>
+      )}
+    </fetcher.Form>
+  );
+}
+
+export const action = async ({ request }) => {
+  let formData = await request.formData();
+  let prompt = formData.get("prompt");
+
+  return fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  });
+};
+```
