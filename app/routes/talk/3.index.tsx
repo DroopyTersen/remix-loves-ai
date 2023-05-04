@@ -7,9 +7,24 @@ import { useStopwatch } from "~/components/useStopwatch";
 
 export default function IsItFastDemo() {
   return (
-    <div className="grid grid-cols-2 gap-6">
-      <PromptDemo label={"Prompt A"} prompt="Count from 1 to 3 in words." />
-      <PromptDemo label="Prompt B" prompt="Count from 1 to 30 in words." />
+    <div>
+      <div className="notes">
+        What things typically impact the spend of an API endpoint?
+        <ul>
+          <li>Network latency</li>
+          <li>Database connectivity & query optimization</li>
+          <li>How much data is coming back over the wire</li>
+          <li>Etc...</li>
+        </ul>
+        <p>
+          Typically, you wouldn't expect a request to the same endpoint for 3
+          items vs 30 items to have a significant difference in response time.
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-6">
+        <PromptDemo label={"Prompt A"} prompt="Count from 1 to 3 in words." />
+        <PromptDemo label="Prompt B" prompt="Count from 1 to 30 in words." />
+      </div>
     </div>
   );
 }

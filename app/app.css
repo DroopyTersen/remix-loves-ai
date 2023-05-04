@@ -5,6 +5,10 @@
 :root {
   --ch-scrollycoding-sticker-width: 70ch;
 }
+html header {
+  padding: 5px 25px;
+  max-width: 100vw;
+}
 .presentation-mode .ch-scrollycoding {
   --ch-scrollycoding-sticker-width: 90vw;
 }

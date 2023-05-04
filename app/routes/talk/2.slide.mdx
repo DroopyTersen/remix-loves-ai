@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react";
+
 <div className='notes'>
 
 ## It's a plain `fetch` request
@@ -112,7 +114,11 @@ The answer will be in `choices[0].message.content`.
 ```
 
 <div style={{ height: "100px" }} />
-### [Demo](demo)
+
+<Link className="text-2xl font-bold" to="/talk/2/demo">
+  Demo
+</Link>
+
 <div style={{ height: "50px" }} />
 ## Use it in Remix
 

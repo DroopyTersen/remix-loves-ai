@@ -5,7 +5,7 @@ export interface SlideDefinition {
 }
 export const SLIDES: SlideDefinition[] = [
   {
-    title: "Introduction",
+    title: "Intro",
     hasDemo: false,
   },
   {
