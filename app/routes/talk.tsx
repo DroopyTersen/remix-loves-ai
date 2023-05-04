@@ -4,7 +4,7 @@ import { useCurrentSlide } from "~/features/layout/useCurrentSlide";
 
 export default function TalkLayout() {
   let currentSlide = useCurrentSlide();
-  let [isPresentationMode, setIsPresentationMode] = useState<boolean>(false);
+  let [isPresentationMode, setIsPresentationMode] = useState<boolean>(true);
 
   return (
     <main

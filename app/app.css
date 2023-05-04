@@ -33,10 +33,22 @@ html textarea {
   max-width: none;
 }
 .notes {
-  /* padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background:  */
+  position: relative;
+  padding: 2rem 2rem 1rem 2rem;
+  border-radius: 10px;
+  /* border: 1px solid #ccc; */
+  background: white;
+  margin-bottom: 2rem;
+  box-shadow: 0 13px 27px -5px #32325d40, 0 8px 16px -8px #0000004d,
+    0 -6px 16px -6px #00000006;
+}
+.notes::before {
+  content: "NOTES";
+  position: absolute;
+  top: 0.5rem;
+  font-size: 13px;
+  /* width: 100%; */
+  color: #777;
 }
 .prose p {
   max-width: 70ch;

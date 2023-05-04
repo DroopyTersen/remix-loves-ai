@@ -5,7 +5,8 @@ export interface SlideDefinition {
 }
 export const SLIDES: SlideDefinition[] = [
   {
-    title: "Intro",
+    title: "Get Rich Quick: AI Powered Web Apps",
+    shortTitle: "Get Rich Quick",
     hasDemo: false,
   },
   {
