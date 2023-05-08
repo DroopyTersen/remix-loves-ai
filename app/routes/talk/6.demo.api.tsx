@@ -1,5 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node";
-const SYSTEM_PROMPT = `You are a AI Language model, who has been co-presenting with Andrew on a talk at a tech conference about Remix, the React.js web framework. Be gracious and thank the audience for their attention. Please keep your response limited to around 70 words.`;
+const SYSTEM_PROMPT = `You are a AI Language model, who has been co-presenting on a talk at a tech conference about Remix, the React.js web framework. Be gracious and thank the audience for their attention. Please keep your response limited to around 70 words.`;
 
 export const loader = async ({ request }: LoaderArgs) => {
   let urlSearchParams = new URL(request?.url).searchParams;

@@ -1,8 +1,10 @@
 import { ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { useState } from "react";
+import { ChatResponseCard } from "~/components/ChatResponseCard";
 import { Loading } from "~/components/Loading";
 import { OpenAILogo } from "~/components/OpenAILogo";
+import { StopwatchDisplay } from "~/components/StopwatchDisplay";
 import { useStopwatch } from "~/components/useStopwatch";
 
 async function handleChatGPTStream(
@@ -70,39 +72,36 @@ export default function EventSourceDemo() {
       >
         <fieldset>
           <label>
-            <span>Prompt</span>
+            <span className="text-lg font-bold text-gray-600">Final Demo!</span>
             <textarea
               required
               name="prompt"
-              rows={4}
-              defaultValue={`Hi there from RemixConf 2023. I'm on stage demoing right now. Say hi to the crowd! 
+              rows={6}
+              className="text-lg"
+              defaultValue={`Hi there from RemixConf 2023. I'm on stage demoing right now.
 
-We are at the end of my talk on connecting to the OpenAI chat completion api using streaming and the Remix web framework. This is the last demo!`}
+We are at the end of my talk on connecting to the OpenAI chat completion api using streaming and the Remix web framework. This is the last demo!
+
+Say hi and bye to the crowd!`}
               placeholder="Enter your prompt for the LLM here..."
             />
           </label>
           <div>
-            <button className="w-full font-mono bg-emerald-600" type="submit">
+            <button
+              className="w-full font-mono text-lg font-bold bg-emerald-600"
+              type="submit"
+            >
               stream:true
             </button>
           </div>
         </fieldset>
         {(isLoading || streamingData) && (
-          <div className="my-4 font-mono text-2xl font-bold text-center">
-            {stopwatch?.value?.toFixed(2)} seconds
-          </div>
+          <StopwatchDisplay value={stopwatch.value} />
         )}
         {streamingData && (
-          <figure className="p-6 shadow-lg bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
-            <p className="whitespace-pre-wrap">“{streamingData}”</p>
-            <figcaption className="flex items-center mt-6 gap-x-4">
-              <OpenAILogo />
-              <div>
-                <div className="font-semibold">OpenAI Chat Completion API</div>
-                <div className="font-mono text-gray-600">Streamed response</div>
-              </div>
-            </figcaption>
-          </figure>
+          <ChatResponseCard subtitle="stream:true">
+            {streamingData}
+          </ChatResponseCard>
         )}
       </form>
     </div>

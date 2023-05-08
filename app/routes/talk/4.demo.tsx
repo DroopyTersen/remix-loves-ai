@@ -1,5 +1,6 @@
 import { ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
+import { ChatResponseCard } from "~/components/ChatResponseCard";
 import { Loading } from "~/components/Loading";
 import { OpenAILogo } from "~/components/OpenAILogo";
 
@@ -16,6 +17,7 @@ export default function Demo1() {
             <textarea
               required
               name="prompt"
+              className="text-xl"
               rows={4}
               defaultValue={
                 "Hi there from RemixConf 2023. I'm on stage demoing right now. Say hi to the crowd!"
@@ -25,7 +27,10 @@ export default function Demo1() {
           </label>
           <div>
             {!isLoading ? (
-              <button className="w-full font-mono bg-emerald-600" type="submit">
+              <button
+                className="w-full font-mono text-lg font-bold bg-emerald-600"
+                type="submit"
+              >
                 stream:true
               </button>
             ) : (
@@ -34,18 +39,9 @@ export default function Demo1() {
           </div>
         </fieldset>
         {data && (
-          <figure className="p-6 shadow-lg bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
-            <p className="whitespace-pre-wrap">
-              “{data?.choices?.[0]?.message?.content}”
-            </p>
-            <figcaption className="flex items-center mt-6 gap-x-4">
-              <OpenAILogo />
-              <div>
-                <div className="font-semibold">OpenAI Chat Completion API</div>
-                <div className="font-mono text-gray-600">{data?.model}</div>
-              </div>
-            </figcaption>
-          </figure>
+          <ChatResponseCard subtitle={data?.model}>
+            {data?.choices?.[0]?.message?.content}
+          </ChatResponseCard>
         )}
       </fetcher.Form>
     </div>
@@ -70,6 +66,10 @@ export const action = async ({ request }: ActionArgs) => {
       stream: true,
       messages: [
         {
+          role: "system",
+          content: SYSTEM_PROMPT,
+        },
+        {
           role: "user",
           content: prompt,
         },
@@ -77,3 +77,5 @@ export const action = async ({ request }: ActionArgs) => {
     }),
   });
 };
+
+const SYSTEM_PROMPT = `Please limit the response to around 30 or 40 words.`;

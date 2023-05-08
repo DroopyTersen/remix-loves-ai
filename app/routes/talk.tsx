@@ -9,7 +9,7 @@ export default function TalkLayout() {
   return (
     <main
       className={`relative p-2 md:p-4 ${
-        isPresentationMode ? "presentation-mode" : ""
+        isPresentationMode ? "presentation-mode max-w-3xl mx-auto" : ""
       }`}
     >
       <h1 className="my-4 text-xl font-bold md:my-8 md:text-4xl">

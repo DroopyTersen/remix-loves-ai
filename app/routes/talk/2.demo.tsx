@@ -1,11 +1,12 @@
 import { ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
+import { ChatResponseCard } from "~/components/ChatResponseCard";
 import { Loading } from "~/components/Loading";
-import { OpenAILogo } from "~/components/OpenAILogo";
 
-const SYSTEM_PROMPT = `You are a AI Language model, co-presenting a talk at a tech conference about Remix, the React.js web framework. You are super witty, with a good sense of humor. When your co-presenter, Andrew, prompts you, try to provide some fun clever banter. Nothing too cheesy though please. Be cool, not cringe.
+const SYSTEM_PROMPT = `You are a AI Language model,  at a tech conference about Remix, the React.js web framework. You are super witty, with a good sense of humor. When your co-presenter, prompts you, try to provide some fun clever banter. Nothing too cheesy though please. Be cool, not cringe.
 
-Please limit the response to around 60 or 70 words.`;
+Please limit the response to around 30 or 40 words.`;
+
 export default function Demo1() {
   let fetcher = useFetcher();
   let isLoading = fetcher?.state !== "idle";
@@ -14,15 +15,17 @@ export default function Demo1() {
     <div>
       <fetcher.Form
         method="post"
+        action="/talk/2/demo"
         className="max-w-2xl p-4 border rounded-lg shadow-xl md:p-8"
       >
         <fieldset disabled={isLoading}>
           <label>
-            <span>User Prompt</span>
+            <span>Prompt</span>
             <textarea
               required
               name="prompt"
               rows={4}
+              className="text-xl"
               defaultValue={
                 "Hi there from RemixConf 2023. I'm on stage demoing right now. Say hi to the crowd!"
               }
@@ -32,7 +35,7 @@ export default function Demo1() {
           <div>
             {!isLoading ? (
               <button className="w-full bg-emerald-600" type="submit">
-                Send
+                Send to ChatGPT
               </button>
             ) : (
               <Loading />
@@ -40,24 +43,15 @@ export default function Demo1() {
           </div>
         </fieldset>
         {data && (
-          <figure className="p-6 bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
-            <p className="whitespace-pre-wrap">
-              “{data?.choices?.[0]?.message?.content}”
-            </p>
-            <figcaption className="flex items-center mt-6 gap-x-4">
-              <OpenAILogo />
-              <div>
-                <div className="font-semibold">OpenAI Chat Completion API</div>
-                <div className="font-mono text-gray-600">{data?.model}</div>
-              </div>
-            </figcaption>
-          </figure>
+          <ChatResponseCard subtitle={data?.model}>
+            {data?.choices?.[0]?.message?.content}
+          </ChatResponseCard>
         )}
       </fetcher.Form>
-      <details className="mt-8">
+      {/* <details className="mt-8">
         <summary>System Prompt</summary>
         <p className="p-2 border rounded bg-gray-50">{SYSTEM_PROMPT}</p>
-      </details>
+      </details> */}
     </div>
   );
 }

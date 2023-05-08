@@ -57,7 +57,7 @@ html textarea {
   max-width: 1000px;
 }
 .prose img {
-  max-width: 90vw;
+  max-width: min(100%, 90vw);
 }
 .prose ul {
   max-width: 70ch;

@@ -50,7 +50,7 @@ The clientside `EventSource` requires a `GET`.
 
 _Expose OpenAI's POST as a GET_
 
-```ts routes/demo.api.ts
+```ts routes/api.chatgpt.ts
 // mark(1:3)
 export const loader = async ({ request }) => {
   let urlSearchParams = new URL(request?.url).searchParams;
