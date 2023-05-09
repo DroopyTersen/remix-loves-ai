@@ -168,7 +168,7 @@ export const action = async ({ request }) => {
 
 Submit to the `action` with a basic HTML `<form/>`.
 
-```tsx routes/demo.tsx
+```tsx focus=1:13 routes/demo.tsx
 export default function Demo() {
   return (
     <form method="post">
@@ -182,6 +182,28 @@ export default function Demo() {
     </form>
   );
 }
+
+export const action = async ({ request }) => {
+  let formData = await request.formData();
+  let prompt = formData.get("prompt");
+
+  return fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  });
+};
 ```
 
 ---
@@ -205,6 +227,28 @@ export default function Demo() {
     </fetcher.Form>
   );
 }
+
+export const action = async ({ request }) => {
+  let formData = await request.formData();
+  let prompt = formData.get("prompt");
+
+  return fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  });
+};
 ```
 
 ---
@@ -230,6 +274,28 @@ export default function Demo() {
     </fetcher.Form>
   );
 }
+
+export const action = async ({ request }) => {
+  let formData = await request.formData();
+  let prompt = formData.get("prompt");
+
+  return fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  });
+};
 ```
 
 </CH.Scrollycoding>
