@@ -39,9 +39,16 @@ export default function Demo1() {
           </div>
         </fieldset>
         {data && (
-          <ChatResponseCard subtitle={data?.model}>
-            {data?.choices?.[0]?.message?.content}
-          </ChatResponseCard>
+          <div className="grid grid-cols-1 gap-6">
+            <ChatResponseCard subtitle={data?.model}>
+              {data?.choices?.[0]?.message?.content}
+            </ChatResponseCard>
+            <img
+              src="/assets/network-tab.png"
+              alt="Network tab"
+              className="rounded-lg shadow-xl"
+            />
+          </div>
         )}
       </fetcher.Form>
     </div>

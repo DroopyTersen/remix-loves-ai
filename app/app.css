@@ -32,6 +32,13 @@ html textarea {
 .prose {
   max-width: none;
 }
+/* 
+ Create a variable for box shadow value
+*/
+:root {
+  --box-shadow: 0 13px 27px -5px #32325d40, 0 8px 16px -8px #0000004d,
+    0 -6px 16px -6px #00000006;
+}
 .notes {
   position: relative;
   padding: 2rem 2rem 1rem 2rem;
@@ -39,9 +46,9 @@ html textarea {
   /* border: 1px solid #ccc; */
   background: white;
   margin-bottom: 2rem;
-  box-shadow: 0 13px 27px -5px #32325d40, 0 8px 16px -8px #0000004d,
-    0 -6px 16px -6px #00000006;
+  box-shadow: var(--box-shadow);
 }
+
 .notes::before {
   content: "NOTES";
   position: absolute;
@@ -58,6 +65,13 @@ html textarea {
 }
 .prose img {
   max-width: min(100%, 90vw);
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.2s ease-out;
+}
+.presentation-mode .prose img:hover {
+  transform: scale(1.2, 1.2);
+  z-index: 10;
 }
 .prose ul {
   max-width: 70ch;
