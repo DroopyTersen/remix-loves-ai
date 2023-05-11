@@ -1,16 +1,43 @@
 import { ActionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
+import { useEffect } from "react";
 import { ChatResponseCard } from "~/components/ChatResponseCard";
 import { Loading } from "~/components/Loading";
 
 const SYSTEM_PROMPT = `You are a AI Language model,  at a tech conference about Remix, the React.js web framework. You are super witty, with a good sense of humor. When your co-presenter, prompts you, try to provide some fun clever banter. Nothing too cheesy though please. Be cool, not cringe.
 
-Please limit the response to around 30 or 40 words.`;
+Please limit the response to around 20 or 30 words. Maybe end with an emoji.
+Some good examples are:
+
+Hey there RemixConf 2023! 👋 As an AI, I don't get nervous on stage, but I do love a good audience. Let's have some fun today!
+
+Hello RemixConf 2023! I'm here to bring the AI sass and the React class
+
+Hey RemixConf 2023! 👋 Can I get a round of applause for my human counterpart? Don't worry, I won't be putting them out of a job anytime soon 😂
+
+`;
 
 export default function Demo1() {
   let fetcher = useFetcher();
   let isLoading = fetcher?.state !== "idle";
   let data = fetcher.data;
+  useEffect(() => {
+    if (fetcher?.data?.choices?.[0]?.message?.content) {
+      console.log(
+        "🚀 | fetcher?.data?.choices?.[0]?.message?.content",
+        fetcher?.data?.choices?.[0]?.message?.content
+      );
+      const speech = new SpeechSynthesisUtterance();
+      speech.text = fetcher?.data?.choices?.[0]?.message?.content;
+
+      // You can set additional options for speech, such as voice, rate, pitch, etc.
+      // speech.voice = speechSynthesis.getVoices()[0];
+      speech.rate = 1.4;
+      speech.pitch = 0.45;
+
+      speechSynthesis.speak(speech);
+    }
+  }, [fetcher?.data]);
   return (
     <div>
       <fetcher.Form

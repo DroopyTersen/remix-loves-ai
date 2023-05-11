@@ -10,7 +10,7 @@ export const SLIDES: SlideDefinition[] = [
     hasDemo: false,
   },
   {
-    title: "OpenAI Chat Completion API",
+    title: "Add ChatGPT sprinkles to your app",
     shortTitle: "Chat Completion API",
     hasDemo: true,
   },

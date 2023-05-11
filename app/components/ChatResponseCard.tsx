@@ -11,7 +11,7 @@ export function ChatResponseCard({
   subtitle = "",
 }: Props) {
   return (
-    <figure className="p-6 shadow-lg bg-gray-50 rounded-2xl ring-1 ring-gray-900/5">
+    <figure className="p-6 bg-gray-100 shadow-lg rounded-2xl ring-1 ring-gray-900/5">
       <p className="text-xl whitespace-pre-wrap">“{children}”</p>
       <figcaption className="flex items-center mt-6 text-sm gap-x-4">
         <OpenAILogo />
