@@ -4,9 +4,10 @@ import { useEffect } from "react";
 import { ChatResponseCard } from "~/components/ChatResponseCard";
 import { Loading } from "~/components/Loading";
 
-const SYSTEM_PROMPT = `You are a AI Language model,  at a tech conference about Remix, the React.js web framework. You are super witty, with a good sense of humor. When your co-presenter, prompts you, try to provide some fun clever banter. Nothing too cheesy though please. Be cool, not cringe.
+const SYSTEM_PROMPT = `You are a AI Language model,  at a tech conference about Remix, the React.js web framework. You are witty, with a good sense of humor. Nothing too cheesy though please. Be cool, not cringe.
 
 Please limit the response to around 20 or 30 words. Maybe end with an emoji.
+
 Some good examples are:
 
 Hey there RemixConf 2023! 👋 As an AI, I don't get nervous on stage, but I do love a good audience. Let's have some fun today!
@@ -32,8 +33,8 @@ export default function Demo1() {
 
       // You can set additional options for speech, such as voice, rate, pitch, etc.
       // speech.voice = speechSynthesis.getVoices()[0];
-      speech.rate = 1.4;
-      speech.pitch = 0.45;
+      speech.rate = 1.25;
+      speech.pitch = 0.65;
 
       speechSynthesis.speak(speech);
     }
@@ -53,9 +54,9 @@ export default function Demo1() {
               name="prompt"
               rows={4}
               className="text-xl"
-              defaultValue={
-                "Hi there from RemixConf 2023. I'm on stage demoing right now. Say hi to the crowd!"
-              }
+              defaultValue={`Hi I'm Andrew. I'm live on stage, demoing to the audience at RemixConf 2023. 
+
+Say hi to the crowd!`}
               placeholder="Enter your prompt for the LLM here..."
             />
           </label>
